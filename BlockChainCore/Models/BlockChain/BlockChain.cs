@@ -14,17 +14,9 @@ namespace BlockChainCore.Models.BlockChain
             InitializeChain();
             AddGenesisBlock();
         }
-
-
-        public void InitializeChain()
-        {
-            Chain = new List<Block>();
-        }
-
         public Block CreateGenesisBlock()
         {
-            //return new Block(DateTime.Now, null, "{}");
-            return null;
+            return new Block(DateTime.Now, null);
         }
 
         public void AddGenesisBlock()
@@ -32,6 +24,10 @@ namespace BlockChainCore.Models.BlockChain
             Chain.Add(CreateGenesisBlock());
         }
 
+        public void InitializeChain()
+        {
+            Chain = new List<Block>();
+        }  
         public Block GetLatestBlock()
         {
             return Chain[Chain.Count - 1];

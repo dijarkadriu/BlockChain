@@ -26,16 +26,11 @@ namespace BlockChainCore.Models.BlockChain
         public DateTime LastEdited { get; set; }
         public string LastEditedBy { get; set; }
 
-        public Block(DateTime timeStamp, string previousHash, string fileName, string fileExtension, string fullPath, DateTime lastEdited, string lastEditedBy)
+        public Block(DateTime timeStamp, string previousHash)
         {
             Index = 0;
             TimeStamp = timeStamp;
-            PreviousHash = previousHash;
-            FileName = fileName;
-            FileExtension = fileExtension;
-            FullPath = fullPath;
-            LastEdited = lastEdited;
-            LastEditedBy = lastEditedBy;
+            PreviousHash = previousHash;        
             Hash = CalculateHash();
         }
 

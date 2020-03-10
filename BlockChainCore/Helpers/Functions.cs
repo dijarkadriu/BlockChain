@@ -1,4 +1,5 @@
-﻿using BlockChainCore.Models.File;
+﻿using BlockChainCore.Models.BlockChain;
+using BlockChainCore.Models.File;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,69 @@ namespace BlockChainCore.Helpers
                 });
             }
             return files;
+        }
+        public static Blockchain PopulateBlockchain()
+        {
+            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
+            Blockchain files = new Blockchain();
+            for (int i = 0; i < filesPaths.Count; i++)
+            {
+                FileInfo f = new FileInfo(filesPaths[i]);
+
+                FileSecurity fS = f.GetAccessControl();
+                files.AddBlock(new Block(DateTime.Now, "")
+                {
+                    FileExtension = f.Extension,
+                    FileName = f.Name,
+                    FullPath = f.FullName,
+                    LastEdited = File.GetLastWriteTime(filesPaths[i]),
+                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
+                });
+            }
+            return files;
+        }
+        public static void Watch(DateTime lastWritten,List<FileModel> newFiles,Blockchain chain)
+        {
+            DateTime lastWrittenTime = lastWritten;
+            while (true)
+            {
+                DateTime newWrittenTime = Directory.GetLastWriteTime(@"C:\Users\ddija\Desktop\Dijar");
+                if (!lastWrittenTime.Equals(newWrittenTime))
+                {
+                    lastWrittenTime = newWrittenTime;
+                    for (int i = 0; i < newFiles.Count; i++)
+                    {
+                        if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName))
+                        {
+                            chain.AddBlock(new Block(DateTime.Now, "")
+                            {
+                                FileExtension = newFiles[i].FileExtension,
+                                FileName = newFiles[i].FileName,
+                                FullPath = newFiles[i].FullPath,
+                                LastEdited = newFiles[i].LastEdited,
+                                LastEditedBy = newFiles[i].LastEditedBy
+                            });
+                            CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+                            
+                        }
+                        else
+                        {
+                            if ((chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName)).LastEdited != newFiles[i].LastEdited)
+                            {
+                                chain.AddBlock(new Block(DateTime.Now, "")
+                                {
+                                    FileExtension = newFiles[i].FileExtension,
+                                    FileName = newFiles[i].FileName,
+                                    FullPath = newFiles[i].FullPath,
+                                    LastEdited = newFiles[i].LastEdited,
+                                    LastEditedBy = newFiles[i].LastEditedBy
+                                });
+                                CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

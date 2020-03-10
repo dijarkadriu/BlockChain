@@ -1,5 +1,6 @@
 ﻿using BlockChainCore;
 using BlockChainCore.Helpers;
+using BlockChainCore.Models.BlockChain;
 using BlockChainCore.Models.File;
 using System;
 using System.Collections.Generic;
@@ -28,10 +29,9 @@ namespace BlockChainUI
     {
         public MainWindow()
         {
-            List<FileModel> fileModels = new List<FileModel>();
-            fileModels = Functions.PopulateFilesList();
+            
             InitializeComponent();
-            fileList.ItemsSource = fileModels;
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -43,6 +43,12 @@ namespace BlockChainUI
                 if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     selectedFolderText.Text = fbd.SelectedPath;
+                    GlobalVariables.FolderToWatch = fbd.SelectedPath;
+                    List<FileModel> fileModels = new List<FileModel>();
+                    fileModels = Functions.PopulateFilesList();
+                    Blockchain chain = Functions.PopulateBlockchain();
+                    fileList.ItemsSource = chain.Chain;
+                    Functions.Watch(Directory.GetLastWriteTime(GlobalVariables.FolderToWatch),fileModels,chain);
                 }
             }
         }
