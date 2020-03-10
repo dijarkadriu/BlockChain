@@ -12,13 +12,30 @@ namespace BlockChainCore.Models.BlockChain
         public string PreviousHash { get; set; }
         public string Hash { get; set; }
         public string Data { get; set; }
+        private string file;
+        public string FileExtension { get; set; }
+        public string FileName
+        {
+            get { return file; }
+            set
+            {
+                file = value.Substring(0, value.Length - FileExtension.Length);
+            }
+        }
+        public string FullPath { get; set; }
+        public DateTime LastEdited { get; set; }
+        public string LastEditedBy { get; set; }
 
-        public Block(DateTime timeStamp, string previousHash, string data)
+        public Block(DateTime timeStamp, string previousHash, string fileName, string fileExtension, string fullPath, DateTime lastEdited, string lastEditedBy)
         {
             Index = 0;
             TimeStamp = timeStamp;
             PreviousHash = previousHash;
-            Data = data;
+            FileName = fileName;
+            FileExtension = fileExtension;
+            FullPath = fullPath;
+            LastEdited = lastEdited;
+            LastEditedBy = lastEditedBy;
             Hash = CalculateHash();
         }
 
@@ -26,7 +43,7 @@ namespace BlockChainCore.Models.BlockChain
         {
             SHA256 sha256 = SHA256.Create();
 
-            byte[] inputBytes = Encoding.ASCII.GetBytes($"{TimeStamp}-{PreviousHash ?? ""}-{Data}");
+            byte[] inputBytes = Encoding.ASCII.GetBytes($"{TimeStamp}-{PreviousHash ?? ""}-{FileName}");
             byte[] outputBytes = sha256.ComputeHash(inputBytes);
 
             return Convert.ToBase64String(outputBytes);

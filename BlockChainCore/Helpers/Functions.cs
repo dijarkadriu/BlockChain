@@ -10,7 +10,7 @@ namespace BlockChainCore.Helpers
         public static void CopyFiles(string name, string extension, string fullPath)
         {
             string date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
-            string path = @"C:\Users\ddija\Desktop\CopiedFiles\" + name + date + extension;
+            string path = GlobalVariables.CopiedFilePath + name + date + extension;
 
             File.Copy(fullPath, path);
         }
