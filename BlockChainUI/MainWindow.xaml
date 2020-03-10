@@ -39,7 +39,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="Gray" BorderThickness=".5" Margin="-6,-3">
-                                    <TextBlock Text="{Binding Username}" HorizontalAlignment="Left" Margin="6,3"/>
+                                    <TextBlock Text="{Binding LastEditedBy}" HorizontalAlignment="Left" Margin="6,3"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -49,7 +49,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="Gray" BorderThickness=".5" Margin="-6,-3">
-                                    <TextBlock Text="{Binding EditedDate}" HorizontalAlignment="Left" Margin="6,3"/>
+                                    <TextBlock Text="{Binding LastEdited}" HorizontalAlignment="Left" Margin="6,3"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

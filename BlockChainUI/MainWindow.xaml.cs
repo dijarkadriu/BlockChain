@@ -1,4 +1,6 @@
 ﻿using BlockChainCore;
+using BlockChainCore.Helpers;
+using BlockChainCore.Models.File;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,13 +29,8 @@ namespace BlockChainUI
         public MainWindow()
         {
             List<FileModel> fileModels = new List<FileModel>();
+            fileModels = Functions.PopulateFilesList();
             InitializeComponent();
-            fileModels.Add(new FileModel()
-            {
-                FileName = "Test",
-                Username = "Doni",
-                EditedDate = DateTime.Now
-            });
             fileList.ItemsSource = fileModels;
         }
 
