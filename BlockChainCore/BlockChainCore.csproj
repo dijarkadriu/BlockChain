@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\BlockChain\" />
     <Folder Include="Models\FTP\" />
     <Folder Include="Models\File\" />
   </ItemGroup>
