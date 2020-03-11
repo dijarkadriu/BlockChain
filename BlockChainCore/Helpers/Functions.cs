@@ -18,7 +18,7 @@ namespace BlockChainCore.Helpers
             FtpClient fTPClient = new FtpClient();
             string fileName = name + extension;
             string path = GlobalVariables.CopiedFilePath + fileName;
-            File.Copy(fullPath,path);
+            File.Copy(fullPath, path);
 
             fTPClient.upload(fileName, path);
         }
@@ -61,12 +61,15 @@ namespace BlockChainCore.Helpers
                     LastEditedForCheck = File.GetLastWriteTime(filesPaths[i]),
                     LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
                 });
+                if (i != 0)
+                    CopyFiles(files.Chain[i].FileName, files.Chain[i].FileExtension, files.Chain[i].FullPath);
+
             }
             return files;
         }
         public static Task Watch(Blockchain chain)
         {
-           
+
             while (true)
             {
                 List<FileModel> newFiles = PopulateFilesList();
@@ -77,10 +80,10 @@ namespace BlockChainCore.Helpers
                     if (!FileModel.IsFileinUse(new FileInfo(newFiles[i].FullPath)))
                     {
                         if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
-                        {                            
+                        {
                             chain.AddBlock(new Block(DateTime.Now, "")
-                                {
-                                    FileExtension = newFiles[i].FileExtension,
+                            {
+                                FileExtension = newFiles[i].FileExtension,
                                 FileName = newFiles[i].FileName,
                                 FullPath = newFiles[i].FullPath,
                                 LastEdited = newFiles[i].LastEdited,
@@ -92,7 +95,7 @@ namespace BlockChainCore.Helpers
                         else
                         {
                             string date = "";
-                            var block = chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension) ;
+                            var block = chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension);
                             if (block.LastEditedForCheck != newFiles[i].LastEdited)
                             {
                                 block.LastEditedForCheck = newFiles[i].LastEdited;
@@ -100,13 +103,13 @@ namespace BlockChainCore.Helpers
                                 chain.AddBlock(new Block(DateTime.Now, "")
                                 {
                                     FileExtension = newFiles[i].FileExtension,
-                                    FileName = newFiles[i].FileName + date ,
+                                    FileName = newFiles[i].FileName + date,
                                     FullPath = newFiles[i].FullPath,
                                     LastEdited = newFiles[i].LastEdited,
                                     LastEditedBy = newFiles[i].LastEditedBy,
                                     LastEditedForCheck = newFiles[i].LastEdited
                                 });
-                                CopyFiles(newFiles[i].FileName+date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                                CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
 
                             }
                         }

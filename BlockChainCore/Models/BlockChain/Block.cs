@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlockChainCore.Models.BlockChain
 {
-   public class Block
+    public class Block
     {
         public int Index { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -19,7 +19,8 @@ namespace BlockChainCore.Models.BlockChain
             get { return file; }
             set
             {
-                file = value.Substring(0, value.Length - FileExtension.Length);
+                if (value.Contains(FileExtension))
+                    file = value.Substring(0, value.Length - FileExtension.Length);
             }
         }
         public string FullPath { get; set; }
@@ -31,7 +32,7 @@ namespace BlockChainCore.Models.BlockChain
         {
             Index = 0;
             TimeStamp = timeStamp;
-            PreviousHash = previousHash;        
+            PreviousHash = previousHash;
             Hash = CalculateHash();
         }
 
