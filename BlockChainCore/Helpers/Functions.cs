@@ -13,13 +13,14 @@ namespace BlockChainCore.Helpers
 {
     public static class Functions
     {
+        static long fileLength;
         public static void CopyFiles(string name, string extension, string fullPath)
         {
             FtpClient fTPClient = new FtpClient();
             string fileName = name + extension;
             string path = GlobalVariables.CopiedFilePath + fileName;
             File.Copy(fullPath, path);
-
+            
             fTPClient.upload(fileName, path);
         }
         public static List<FileModel> PopulateFilesList()
@@ -36,6 +37,7 @@ namespace BlockChainCore.Helpers
                     FileExtension = f.Extension,
                     FileName = f.Name,
                     FullPath = f.FullName,
+                    Data = f.Length,
                     LastEdited = File.GetLastWriteTime(filesPaths[i]),
                     LastEditedForCheck = File.GetLastWriteTime(filesPaths[i]),
                     LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
@@ -51,16 +53,19 @@ namespace BlockChainCore.Helpers
             {
                 FileInfo f = new FileInfo(filesPaths[i]);
 
+                var data = f.Length;
                 FileSecurity fS = f.GetAccessControl();
                 files.AddBlock(new Block(DateTime.Now, "")
                 {
                     FileExtension = f.Extension,
                     FileName = f.Name,
                     FullPath = f.FullName,
+                    Data = f.Length,
                     LastEdited = File.GetLastWriteTime(filesPaths[i]),
                     LastEditedForCheck = File.GetLastWriteTime(filesPaths[i]),
                     LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
                 });
+         
                 if (i != 0)
                     CopyFiles(files.Chain[i].FileName, files.Chain[i].FileExtension, files.Chain[i].FullPath);
 
@@ -86,18 +91,23 @@ namespace BlockChainCore.Helpers
                                 FileExtension = newFiles[i].FileExtension,
                                 FileName = newFiles[i].FileName,
                                 FullPath = newFiles[i].FullPath,
+                                Data = newFiles[i].Data,
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy,
                                 LastEditedForCheck = newFiles[i].LastEdited
                             });
+                            
                             CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+                           
                         }
                         else
                         {
                             string date = "";
                             var block = chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension);
-                            if (block.LastEditedForCheck != newFiles[i].LastEdited)
+                            
+                            if (block.LastEditedForCheck != newFiles[i].LastEdited && fileLength != newFiles[i].Data)
                             {
+                                fileLength = newFiles[i].Data;
                                 block.LastEditedForCheck = newFiles[i].LastEdited;
                                 date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
                                 chain.AddBlock(new Block(DateTime.Now, "")
@@ -105,12 +115,13 @@ namespace BlockChainCore.Helpers
                                     FileExtension = newFiles[i].FileExtension,
                                     FileName = newFiles[i].FileName + date,
                                     FullPath = newFiles[i].FullPath,
+                                    Data = newFiles[i].Data,
                                     LastEdited = newFiles[i].LastEdited,
                                     LastEditedBy = newFiles[i].LastEditedBy,
                                     LastEditedForCheck = newFiles[i].LastEdited
                                 });
                                 CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
-
+                               
                             }
                         }
                     }

@@ -22,6 +22,8 @@ namespace BlockChainCore.Models.File
         public DateTime LastEditedForCheck { get; set; }
         public string LastEditedBy { get; set; }
 
+        public long Data { get; set; }
+
        public static bool IsFileinUse(FileInfo file)
         {
             FileStream stream = null;
