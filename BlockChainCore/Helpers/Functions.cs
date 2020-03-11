@@ -1,5 +1,6 @@
 ﻿using BlockChainCore.Models.BlockChain;
 using BlockChainCore.Models.File;
+using BlockChainCore.Models.FTP;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,9 +15,13 @@ namespace BlockChainCore.Helpers
     {
         public static void CopyFiles(string name, string extension, string fullPath)
         {
+            FtpClient fTPClient = new FtpClient();
             string date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
-            string path = GlobalVariables.CopiedFilePath + name + date + extension;
+            string fileName = name + date + extension;
+            string path = GlobalVariables.CopiedFilePath + fileName;
             File.Copy(fullPath, path);
+
+            fTPClient.upload(fileName, path);
         }
         public static List<FileModel> PopulateFilesList()
         {
@@ -60,6 +65,7 @@ namespace BlockChainCore.Helpers
         }
         public static Task Watch(DateTime lastWritten,List<FileModel> newFiles,Blockchain chain)
         {
+           
             DateTime lastWrittenTime = lastWritten;
             while (true)
             {
@@ -79,7 +85,9 @@ namespace BlockChainCore.Helpers
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy
                             });
-                            CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+                           CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+
+                            
                             
                         }
                         else
@@ -94,7 +102,8 @@ namespace BlockChainCore.Helpers
                                     LastEdited = newFiles[i].LastEdited,
                                     LastEditedBy = newFiles[i].LastEditedBy
                                 });
-                                CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+                                 CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+                                
                             }
                         }
                     }
