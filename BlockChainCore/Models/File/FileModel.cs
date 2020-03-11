@@ -19,6 +19,7 @@ namespace BlockChainCore.Models.File
         }
         public string FullPath { get; set; }
         public DateTime LastEdited { get; set; }
+        public DateTime LastEditedForCheck { get; set; }
         public string LastEditedBy { get; set; }
 
        public static bool IsFileinUse(FileInfo file)
