@@ -15,9 +15,8 @@ namespace BlockChainCore.Helpers
     {
         public static void CopyFiles(string name, string extension, string fullPath)
         {
-            FtpClient fTPClient = new FtpClient();
-            string date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
-            string fileName = name + date + extension;
+            FtpClient fTPClient = new FtpClient();           
+            string fileName = name  + extension;
             string path = GlobalVariables.CopiedFilePath + fileName;
             File.Copy(fullPath, path);
 
@@ -77,9 +76,10 @@ namespace BlockChainCore.Helpers
                     {
                         if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
+                          
                             chain.AddBlock(new Block(DateTime.Now, "")
                             {
-                                FileExtension = newFiles[i].FileExtension,
+                                FileExtension = newFiles[i].FileExtension + DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim(),
                                 FileName = newFiles[i].FileName,
                                 FullPath = newFiles[i].FullPath,
                                 LastEdited = newFiles[i].LastEdited,
@@ -93,7 +93,7 @@ namespace BlockChainCore.Helpers
                             {
                                 chain.AddBlock(new Block(DateTime.Now, "")
                                 {
-                                    FileExtension = newFiles[i].FileExtension,
+                                    FileExtension = newFiles[i].FileExtension + DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim(),
                                     FileName = newFiles[i].FileName,
                                     FullPath = newFiles[i].FullPath,
                                     LastEdited = newFiles[i].LastEdited,
