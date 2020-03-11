@@ -79,8 +79,8 @@ namespace BlockChainCore.Helpers
                         if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {                            
                             chain.AddBlock(new Block(DateTime.Now, "")
-                            {
-                                FileExtension = newFiles[i].FileExtension,
+                                {
+                                    FileExtension = newFiles[i].FileExtension,
                                 FileName = newFiles[i].FileName,
                                 FullPath = newFiles[i].FullPath,
                                 LastEdited = newFiles[i].LastEdited,
