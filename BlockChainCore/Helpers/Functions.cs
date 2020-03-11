@@ -79,8 +79,8 @@ namespace BlockChainCore.Helpers
                           
                             chain.AddBlock(new Block(DateTime.Now, "")
                             {
-                                FileExtension = newFiles[i].FileExtension + DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim(),
-                                FileName = newFiles[i].FileName,
+                                FileExtension = newFiles[i].FileExtension,
+                                FileName = newFiles[i].FileName + DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim(),
                                 FullPath = newFiles[i].FullPath,
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy
@@ -93,8 +93,8 @@ namespace BlockChainCore.Helpers
                             {
                                 chain.AddBlock(new Block(DateTime.Now, "")
                                 {
-                                    FileExtension = newFiles[i].FileExtension + DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim(),
-                                    FileName = newFiles[i].FileName,
+                                    FileExtension = newFiles[i].FileExtension ,
+                                    FileName = newFiles[i].FileName + DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim(),
                                     FullPath = newFiles[i].FullPath,
                                     LastEdited = newFiles[i].LastEdited,
                                     LastEditedBy = newFiles[i].LastEditedBy
