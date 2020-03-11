@@ -84,7 +84,7 @@ namespace BlockChainCore.Helpers
                         }
                         else
                         {
-                            if ((chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName)).LastEdited != newFiles[i].LastEdited)
+                            if ((chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension)).LastEdited != newFiles[i].LastEdited)
                             {
                                 chain.AddBlock(new Block(DateTime.Now, "")
                                 {
