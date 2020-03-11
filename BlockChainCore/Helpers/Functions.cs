@@ -63,19 +63,19 @@ namespace BlockChainCore.Helpers
             }
             return files;
         }
-        public static Task Watch(DateTime lastWritten,List<FileModel> newFiles,Blockchain chain)
+        public static Task Watch( Blockchain chain)
         {
-           
-            DateTime lastWrittenTime = lastWritten;
+
             while (true)
             {
-                DateTime newWrittenTime = Directory.GetLastWriteTime(@"C:\Users\ddija\Desktop\Dijar");
-                if (!lastWrittenTime.Equals(newWrittenTime))
+                List<FileModel> newFiles = PopulateFilesList();
+                //remove files that are in use 
+                newFiles.RemoveAll(f => f.FileName.StartsWith("~$"));
+                for (int i = 0; i < newFiles.Count; i++)
                 {
-                    lastWrittenTime = newWrittenTime;
-                    for (int i = 0; i < newFiles.Count; i++)
+                    if (!FileModel.IsFileinUse(new FileInfo(newFiles[i].FullPath)))
                     {
-                        if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName))
+                        if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
                             chain.AddBlock(new Block(DateTime.Now, "")
                             {
@@ -85,10 +85,7 @@ namespace BlockChainCore.Helpers
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy
                             });
-                           CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
-
-                            
-                            
+                            CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
                         }
                         else
                         {
@@ -102,12 +99,13 @@ namespace BlockChainCore.Helpers
                                     LastEdited = newFiles[i].LastEdited,
                                     LastEditedBy = newFiles[i].LastEditedBy
                                 });
-                                 CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
-                                
+                                CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
+
                             }
                         }
                     }
                 }
+
             }
         }
     }

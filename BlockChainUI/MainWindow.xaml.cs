@@ -44,11 +44,9 @@ namespace BlockChainUI
                 {
                     selectedFolderText.Text = fbd.SelectedPath;
                     GlobalVariables.FolderToWatch = fbd.SelectedPath;
-                    List<FileModel> fileModels = new List<FileModel>();
-                    fileModels = Functions.PopulateFilesList();
                     Blockchain chain = Functions.PopulateBlockchain();
                     fileList.ItemsSource = chain.Chain;
-                    Functions.Watch(Directory.GetLastWriteTime(GlobalVariables.FolderToWatch),fileModels,chain);
+                    Functions.Watch(chain);
                 }
             }
         }
