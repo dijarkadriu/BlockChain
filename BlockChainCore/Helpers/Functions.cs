@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BlockChainCore.Helpers
 {
@@ -57,7 +58,7 @@ namespace BlockChainCore.Helpers
             }
             return files;
         }
-        public static void Watch(DateTime lastWritten,List<FileModel> newFiles,Blockchain chain)
+        public static Task Watch(DateTime lastWritten,List<FileModel> newFiles,Blockchain chain)
         {
             DateTime lastWrittenTime = lastWritten;
             while (true)
