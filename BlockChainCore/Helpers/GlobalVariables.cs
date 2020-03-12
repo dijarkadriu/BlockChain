@@ -6,7 +6,7 @@ namespace BlockChainCore.Helpers
 {
     public class GlobalVariables
     {
-        public static string CopiedFilePath = @"C:\Users\ddija\Desktop\CopiedFiles\";
+        public static string CopiedFilePath = @"C:\Users\Donjet Salihi\Desktop\CopiedFiles\";
         public static string FolderToWatch= "";
     }
 }

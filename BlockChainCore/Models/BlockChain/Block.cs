@@ -20,6 +20,8 @@ namespace BlockChainCore.Models.BlockChain
             {
                 if (value.Contains(FileExtension))
                     file = value.Substring(0, value.Length - FileExtension.Length);
+                else
+                    file = value;
             }
         }
         public string FullPath { get; set; }

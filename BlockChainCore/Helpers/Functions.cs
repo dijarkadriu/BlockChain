@@ -49,7 +49,7 @@ namespace BlockChainCore.Helpers
             return false;
         }
 
-        public static Task Watch(Blockchain chain)
+        public static async Task Watch(Blockchain chain)
         {
             string path = "";
             while (true)
@@ -62,7 +62,7 @@ namespace BlockChainCore.Helpers
                 {
                     if (!FileModel.IsFileinUse(new FileInfo(newFiles[i].FullPath)))
                     {
-                        if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
+                        if (!chain.Chain.Any(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
                             path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
                             Block block = new  Block(DateTime.Now, "")
@@ -91,7 +91,7 @@ namespace BlockChainCore.Helpers
                                     Block blockToAdd = new Block(DateTime.Now, "")
                                     {
                                         FileExtension = newFiles[i].FileExtension,
-                                        FileName = newFiles[i].FileName,
+                                        FileName = newFiles[i].FileName + date,
                                         FullPath = path,                                       
                                         LastEdited = newFiles[i].LastEdited,
                                         LastEditedBy = newFiles[i].LastEditedBy,
@@ -103,7 +103,7 @@ namespace BlockChainCore.Helpers
                         }
                     }
                 }
-
+               await Task.Delay(3000);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using BlockChainCore.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
@@ -11,7 +12,7 @@ namespace BlockChainCore.Models.BlockChain
 
     public class Blockchain
     {
-        public List<Block> Chain { set; get; }
+        public ObservableCollection<Block> Chain { set; get; }
 
         public Blockchain()
         {
@@ -30,7 +31,7 @@ namespace BlockChainCore.Models.BlockChain
 
         public void InitializeChain()
         {
-            Chain = new List<Block>();
+            Chain = new ObservableCollection<Block>();
         }
         public Block GetLatestBlock()
         {
