@@ -10,8 +10,7 @@ namespace BlockChainCore.Models.BlockChain
         public int Index { get; set; }
         public DateTime TimeStamp { get; set; }
         public string PreviousHash { get; set; }
-        public string Hash { get; set; }
-        public long Data { get; set; }
+        public string Hash { get; set; }       
         private string file;
         public string FileExtension { get; set; }
         public string FileName

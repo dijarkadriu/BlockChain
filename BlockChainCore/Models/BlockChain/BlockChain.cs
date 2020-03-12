@@ -1,5 +1,9 @@
-﻿using System;
+﻿using BlockChainCore.Helpers;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace BlockChainCore.Models.BlockChain
@@ -27,7 +31,7 @@ namespace BlockChainCore.Models.BlockChain
         public void InitializeChain()
         {
             Chain = new List<Block>();
-        }  
+        }
         public Block GetLatestBlock()
         {
             return Chain[Chain.Count - 1];
@@ -40,6 +44,34 @@ namespace BlockChainCore.Models.BlockChain
             block.PreviousHash = latestBlock.Hash;
             block.Hash = block.CalculateHash();
             Chain.Add(block);
+        }
+        public static Blockchain PopulateBlockchain()
+        {
+            string path = "";
+         
+            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
+            Blockchain files = new Blockchain();
+            for (int i = 0; i < filesPaths.Count; i++)
+            {
+                FileInfo f = new FileInfo(filesPaths[i]);
+               
+                FileSecurity fS = f.GetAccessControl();
+                Block block = new Block(DateTime.Now, "")
+                {
+                    FileExtension = f.Extension,
+                    FileName = f.Name,
+                    FullPath = f.FullName,                   
+                    LastEdited = System.IO.File.GetLastWriteTime(filesPaths[i]),
+                    LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
+                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
+                };
+                path = Functions.CopyFiles(block.FileName,block.FileExtension, block.FullPath);
+                block.FullPath = path;
+                files.AddBlock(block);
+
+
+            }
+            return files;
         }
     }
 }

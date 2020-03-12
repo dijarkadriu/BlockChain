@@ -44,7 +44,7 @@ namespace BlockChainUI
                 {
                     selectedFolderText.Text = fbd.SelectedPath;
                     GlobalVariables.FolderToWatch = fbd.SelectedPath;
-                    Blockchain chain = Functions.PopulateBlockchain();
+                    Blockchain chain = Blockchain.PopulateBlockchain();
                     fileList.ItemsSource = chain.Chain;
                     Functions.Watch(chain);
                 }

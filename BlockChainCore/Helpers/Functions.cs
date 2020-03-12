@@ -13,71 +13,49 @@ namespace BlockChainCore.Helpers
 {
     public static class Functions
     {
-        static long fileLength;
-        public static void CopyFiles(string name, string extension, string fullPath)
+        public static string CopyFiles(string name, string extension, string fullPath)
         {
             FtpClient fTPClient = new FtpClient();
             string fileName = name + extension;
             string path = GlobalVariables.CopiedFilePath + fileName;
             File.Copy(fullPath, path);
-            
-            fTPClient.upload(fileName, path);
+
+
+            // fTPClient.upload(fileName, path);
+            return path;
         }
-        public static List<FileModel> PopulateFilesList()
+        public static string ReturnPathOfLastFile(string fileName, string extensions)
         {
-            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
-            List<FileModel> files = new List<FileModel>();
-            for (int i = 0; i < filesPaths.Count; i++)
-            {
-                FileInfo f = new FileInfo(filesPaths[i]);
+            List<string> filesPaths = Directory.GetFiles(GlobalVariables.CopiedFilePath).ToList();
+            filesPaths = filesPaths.Where(c => c.Contains(fileName) && c.Contains(extensions) && !c.Contains("~$")).OrderByDescending(c => c).ToList();
+            return filesPaths[0];
 
-                FileSecurity fS = f.GetAccessControl();
-                files.Add(new FileModel()
-                {
-                    FileExtension = f.Extension,
-                    FileName = f.Name,
-                    FullPath = f.FullName,
-                    Data = f.Length,
-                    LastEdited = File.GetLastWriteTime(filesPaths[i]),
-                    LastEditedForCheck = File.GetLastWriteTime(filesPaths[i]),
-                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
-                });
-            }
-            return files;
         }
-        public static Blockchain PopulateBlockchain()
+        public static bool FileEquals(string lastFilePath, string newFilePath)
         {
-            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
-            Blockchain files = new Blockchain();
-            for (int i = 0; i < filesPaths.Count; i++)
+            byte[] lastFile = File.ReadAllBytes(lastFilePath);
+            byte[] newFile = File.ReadAllBytes(newFilePath);
+            if (lastFile.Length == newFile.Length)
             {
-                FileInfo f = new FileInfo(filesPaths[i]);
-
-                var data = f.Length;
-                FileSecurity fS = f.GetAccessControl();
-                files.AddBlock(new Block(DateTime.Now, "")
+                for (int i = 0; i < lastFile.Length; i++)
                 {
-                    FileExtension = f.Extension,
-                    FileName = f.Name,
-                    FullPath = f.FullName,
-                    Data = f.Length,
-                    LastEdited = File.GetLastWriteTime(filesPaths[i]),
-                    LastEditedForCheck = File.GetLastWriteTime(filesPaths[i]),
-                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
-                });
-         
-                if (i != 0)
-                    CopyFiles(files.Chain[i].FileName, files.Chain[i].FileExtension, files.Chain[i].FullPath);
-
+                    if (lastFile[i] != newFile[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
-            return files;
+            return false;
         }
+
         public static Task Watch(Blockchain chain)
         {
-
+            string path = "";
             while (true)
             {
-                List<FileModel> newFiles = PopulateFilesList();
+                string date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
+                List<FileModel> newFiles = FileModel.PopulateFilesList();
                 //remove files that are in use 
                 newFiles.RemoveAll(f => f.FileName.StartsWith("~$"));
                 for (int i = 0; i < newFiles.Count; i++)
@@ -86,42 +64,41 @@ namespace BlockChainCore.Helpers
                     {
                         if (!chain.Chain.Exists(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
-                            chain.AddBlock(new Block(DateTime.Now, "")
+                            path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                            Block block = new  Block(DateTime.Now, "")
                             {
                                 FileExtension = newFiles[i].FileExtension,
                                 FileName = newFiles[i].FileName,
-                                FullPath = newFiles[i].FullPath,
-                                Data = newFiles[i].Data,
+                                FullPath = path,                                
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy,
                                 LastEditedForCheck = newFiles[i].LastEdited
-                            });
-                            
-                            CopyFiles(newFiles[i].FileName, newFiles[i].FileExtension, newFiles[i].FullPath);
-                           
+                            };
+                            chain.AddBlock(block);                                                      
                         }
                         else
                         {
-                            string date = "";
                             var block = chain.Chain.SingleOrDefault(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension);
-                            
-                            if (block.LastEditedForCheck != newFiles[i].LastEdited && fileLength != newFiles[i].Data)
+
+                            if (block.LastEditedForCheck != newFiles[i].LastEdited)
                             {
-                                fileLength = newFiles[i].Data;
-                                block.LastEditedForCheck = newFiles[i].LastEdited;
-                                date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
-                                chain.AddBlock(new Block(DateTime.Now, "")
+                                string lastFilePath = ReturnPathOfLastFile(newFiles[i].FileName, newFiles[i].FileExtension);
+                                if (!FileEquals(lastFilePath,newFiles[i].FullPath))
                                 {
-                                    FileExtension = newFiles[i].FileExtension,
-                                    FileName = newFiles[i].FileName + date,
-                                    FullPath = newFiles[i].FullPath,
-                                    Data = newFiles[i].Data,
-                                    LastEdited = newFiles[i].LastEdited,
-                                    LastEditedBy = newFiles[i].LastEditedBy,
-                                    LastEditedForCheck = newFiles[i].LastEdited
-                                });
-                                CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
-                               
+                                    block.LastEditedForCheck = newFiles[i].LastEdited;
+
+                                    path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                                    Block blockToAdd = new Block(DateTime.Now, "")
+                                    {
+                                        FileExtension = newFiles[i].FileExtension,
+                                        FileName = newFiles[i].FileName,
+                                        FullPath = path,                                       
+                                        LastEdited = newFiles[i].LastEdited,
+                                        LastEditedBy = newFiles[i].LastEditedBy,
+                                        LastEditedForCheck = newFiles[i].LastEdited
+                                    };
+                                    chain.AddBlock(blockToAdd);
+                                }
                             }
                         }
                     }
