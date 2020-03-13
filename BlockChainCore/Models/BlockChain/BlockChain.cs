@@ -123,10 +123,27 @@ namespace BlockChainCore.Models.BlockChain
             foreach (string filePath in filesPaths) 
             {
                 GlobalVariables.MakeDirFromFile(filePath);
+                createWatchingThread(filePath);
             }
 
             Thread.Sleep(1000);
             checkForNewFiles();
+        }
+
+        private static void createWatchingThread(string filePath)
+        {
+            string fileToWatch = GlobalVariables.FolderToWatch + "\\" + filePath;
+            runThreadWatcherForFile(fileToWatch);
+        }
+
+        private static void runThreadWatcherForFile(string fileToWatch)
+        {
+            new Thread(new ThreadStart(watchFile));//qitu ke met
+            throw new NotImplementedException();
+        }
+
+        private static void watchFile() {
+            //continue
         }
 
         /// <summary>
