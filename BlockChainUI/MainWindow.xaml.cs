@@ -42,11 +42,12 @@ namespace BlockChainUI
 
                 if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
+
                     selectedFolderText.Text = fbd.SelectedPath;
-                    GlobalVariables.FolderToWatch = fbd.SelectedPath;
+                    GlobalVariables.fixVariables(fbd.SelectedPath);
                     Blockchain chain = Blockchain.PopulateBlockchain();
-                    fileList.ItemsSource = chain.Chain;
-                    Functions.Watch(chain);
+                    //fileList.ItemsSource = chain.Chain;
+                    //Functions.Watch(chain);
                 }
             }
         }

@@ -24,10 +24,11 @@ namespace BlockChainCore.Models.File
         public DateTime LastEdited { get; set; }
         public DateTime LastEditedForCheck { get; set; }
         public string LastEditedBy { get; set; }
+        public bool hasThread { get; set; }
 
-       
 
-       public static bool IsFileinUse(FileInfo file)
+
+        public static bool IsFileinUse(FileInfo file)
         {
             FileStream stream = null;
 
@@ -63,11 +64,12 @@ namespace BlockChainCore.Models.File
                 {
                     FileExtension = f.Extension,
                     FileName = f.Name,
-                    FullPath = f.FullName,                   
+                    FullPath = f.FullName,
                     LastEdited = System.IO.File.GetLastWriteTime(filesPaths[i]),
                     LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
-                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
-                });
+                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString(),
+                    hasThread = false
+                }) ;
             }
             return files;
         }
