@@ -38,7 +38,10 @@ namespace BlockChainCore.Models.BlockChain
             PreviousHash = previousHash;
             Hash = CalculateHash();
         }
-
+        /// <summary>
+        /// Caculates the hash based on timestamp,previous hash and file name.
+        /// </summary>
+        /// <returns>Returns the hash.</returns>
         public string CalculateHash()
         {
             SHA256 sha256 = SHA256.Create();

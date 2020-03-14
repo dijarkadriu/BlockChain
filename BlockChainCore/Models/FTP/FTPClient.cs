@@ -17,6 +17,11 @@ namespace BlockChainCore.Models.FTP
         private Stream ftpStream = null;
         private int bufferSize = 2048;
 
+        /// <summary>
+        /// Uploads the file to the ftp server
+        /// </summary>
+        /// <param name="fileName">The name of the file to be uploaded.</param>
+        /// <param name="localFile">Path of the file.</param>
         public void upload(string fileName, string localFile)
         {
             try
