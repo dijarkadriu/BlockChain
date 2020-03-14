@@ -1,8 +1,9 @@
 ﻿using BlockChainCore.Helpers;
 using BlockChainCore.Models.BlockChain;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
+using System.Resources;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace BlockChainUI
         Thread thread;
         Blockchain chain = null;
 
-        private Block selectedBlock; 
+        private Block selectedBlock;
         public MainWindow()
         {
             InitializeComponent();
@@ -81,6 +82,20 @@ namespace BlockChainUI
             }
 
         }
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            // Handle closing logic, set e.Cancel as needed
+        }
+        void DataWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (thread != null)
+                thread.Interrupt();
+            thread = null;
+            selectedBlock = null;
+            chain = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
 
         private void StartTrack_Click(object sender, RoutedEventArgs e)
         {
@@ -134,7 +149,7 @@ namespace BlockChainUI
                 };
                 p.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
             }

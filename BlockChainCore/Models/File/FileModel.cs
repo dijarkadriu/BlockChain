@@ -28,7 +28,11 @@ namespace BlockChainCore.Models.File
         public bool hasThread { get; set; }
 
 
-
+        /// <summary>
+        /// Determinates if a file is beign used.
+        /// </summary>
+        /// <param name="file">The file to check.</param>
+        /// <returns>Returns true if its beign used, false if not.</returns>
         public bool IsFileinUse(FileInfo file)
         {
             FileStream stream = null;
@@ -52,6 +56,10 @@ namespace BlockChainCore.Models.File
             }
             return false;
         }
+        /// <summary>
+        /// Populates the list with the files to check.
+        /// </summary>
+        /// <returns>Return the list</returns>
         public List<FileModel> PopulateFilesList()
         {
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
