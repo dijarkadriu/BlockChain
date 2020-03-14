@@ -30,6 +30,7 @@ namespace BlockChainCore.Models.BlockChain
         public DateTime CreatedDate { get; set; }
         public string LastEditedBy { get; set; }
 
+        public string FileNameForList { get; set; }
         public Block(DateTime timeStamp, string previousHash)
         {
             Index = 0;

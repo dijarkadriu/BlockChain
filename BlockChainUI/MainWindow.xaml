@@ -9,12 +9,12 @@
     <Grid Height="461" Margin="0,0,-67,0">
         <Label Content="File Names:" HorizontalAlignment="Left" Margin="42,25,0,0" VerticalAlignment="Top" Width="124"/>
 
-        <Button Content="Open File" HorizontalAlignment="Left" Margin="235,370,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.692,-0.858"/>
-        <Label Content="Choose Folder to Track:" HorizontalAlignment="Left" Margin="581,25,0,0" VerticalAlignment="Top" Width="151"/>
-        <Button Content="Choose Folder" HorizontalAlignment="Left" Margin="581,68,0,0" VerticalAlignment="Top" Width="96" Click="Button_Click"/>
-        <TextBlock x:Name="selectedFolderText" HorizontalAlignment="Left" Margin="581,116,0,0" Text="No Selected Folder" TextWrapping="Wrap" VerticalAlignment="Top" Height="114" Width="151"/>
-        <Button Content="Start Tracking" HorizontalAlignment="Left" Margin="581,370,0,0" VerticalAlignment="Top" Width="96" RenderTransformOrigin="0.485,6.287"/>
-        <ListView x:Name="fileList" RenderTransformOrigin="0.655,0.533" Height="283" VerticalAlignment="Top" Margin="42,58,392,0">
+        <Button Content="Open File" HorizontalAlignment="Left" Margin="235,370,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.692,-0.858" Click="Open_Click"/>
+        <Label Content="Choose Folder to Track:" HorizontalAlignment="Left" Margin="570,25,0,0" VerticalAlignment="Top" Width="151"/>
+        <Button Content="Choose Folder" HorizontalAlignment="Left" Margin="581,56,0,0" VerticalAlignment="Top" Width="96" Click="Track_Click" RenderTransformOrigin="0.54,-0.5"/>
+        <TextBlock x:Name="selectedFolderText" Foreground="Red" HorizontalAlignment="Left" Margin="581,78,0,0" Text="No Selected Folder" TextWrapping="Wrap" VerticalAlignment="Top" Height="114" Width="151"/>
+        <Button x:Name="btnTrack" Content="Start Tracking" HorizontalAlignment="Left" Margin="581,370,0,0" VerticalAlignment="Top" Width="96" RenderTransformOrigin="0.485,6.287" Click="StartTrack_Click"/>
+        <ListView x:Name="fileList" RenderTransformOrigin="0.655,0.533" Height="283" SelectionChanged="fileList_SelectionChanged" SelectionMode="Single" VerticalAlignment="Top" Margin="42,58,392,0">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -63,6 +63,20 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <TextBlock HorizontalAlignment="Left" Margin="581,200,0,0" Text="Choose The Folder To Store The File Versions:" TextWrapping="Wrap" VerticalAlignment="Top" Height="56" Width="129"/>
+        <Button Content="Choose Folder" HorizontalAlignment="Left" Margin="581,241,0,0" VerticalAlignment="Top" Width="96" Click="Copy_Click"/>
+        <TextBlock x:Name="copiedFolder" Foreground="Red"  HorizontalAlignment="Left" Margin="581,266,0,0" Text="No Selected Folder" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-0.133,-0.338" Height="53" Width="129"/>
+        <Separator HorizontalAlignment="Left" Margin="505,189,0,0" VerticalAlignment="Top" Height="6" RenderTransformOrigin="0.5,0.5" Width="278">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+        <Separator HorizontalAlignment="Left" Margin="581,330,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

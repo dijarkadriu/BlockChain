@@ -67,7 +67,8 @@ namespace BlockChainCore.Models.BlockChain
                     CreatedDate = f.CreationTime,
                     LastEdited = System.IO.File.GetLastWriteTime(filesPaths[i]),
                     LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
-                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
+                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString(),
+                    FileNameForList = f.Name
                 };
                 path = new Functions().GetFullPath(block.FileName + date, block.FileExtension, block.FullPath);
                 block.FullPath = path;

@@ -86,7 +86,8 @@ namespace BlockChainCore.Helpers
                                 FullPath = path,
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy,
-                                LastEditedForCheck = newFiles[i].LastEdited
+                                LastEditedForCheck = newFiles[i].LastEdited,
+                                FileNameForList = newFiles[i].FileName + date
                             };
                             chain.AddBlock(block);
                         }
@@ -109,7 +110,8 @@ namespace BlockChainCore.Helpers
                                         FullPath = path,
                                         LastEdited = newFiles[i].LastEdited,
                                         LastEditedBy = newFiles[i].LastEditedBy,
-                                        LastEditedForCheck = newFiles[i].LastEdited
+                                        LastEditedForCheck = newFiles[i].LastEdited,
+                                        FileNameForList = newFiles[i].FileName + date
                                     };
                                     chain.AddBlock(blockToAdd);
                                 }
