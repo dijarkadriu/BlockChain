@@ -134,5 +134,16 @@ namespace BlockChainUI
                 System.Windows.Forms.MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (thread != null)
+                thread = null;
+
+            chain = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+        }
     }
 }
