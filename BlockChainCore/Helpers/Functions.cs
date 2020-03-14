@@ -119,7 +119,10 @@ namespace BlockChainCore.Helpers
                                 LastEditedForCheck = newFiles[i].LastEdited,
                                 FileNameForList = newFiles[i].FileName + date
                             };
-                            chain.AddBlock(block);
+                            System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate
+                            {
+                                chain.AddBlock(block);
+                            });
                         }
                         else
                         {
@@ -143,7 +146,11 @@ namespace BlockChainCore.Helpers
                                         LastEditedForCheck = newFiles[i].LastEdited,
                                         FileNameForList = newFiles[i].FileName + date
                                     };
-                                    chain.AddBlock(blockToAdd);
+                                    System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate
+                                    {
+                                        chain.AddBlock(blockToAdd);
+                                    });
+                                    
                                 }
                             }
                         }
