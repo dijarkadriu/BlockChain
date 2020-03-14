@@ -54,7 +54,7 @@ namespace BlockChainCore.Helpers
             string path = "";
             while (true)
             {
-                string date = DateTime.Now.ToString().Replace('-', ' ').Replace(':', ' ').Trim();
+                string date = DateTime.Now.ToString().Replace(':', '-').Trim();
                 List<FileModel> newFiles = FileModel.PopulateFilesList();
                 //remove files that are in use 
                 newFiles.RemoveAll(f => f.FileName.StartsWith("~$"));
@@ -65,16 +65,16 @@ namespace BlockChainCore.Helpers
                         if (!chain.Chain.Any(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
                             path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
-                            Block block = new  Block(DateTime.Now, "")
+                            Block block = new Block(DateTime.Now, "")
                             {
                                 FileExtension = newFiles[i].FileExtension,
                                 FileName = newFiles[i].FileName,
-                                FullPath = path,                                
+                                FullPath = path,
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy,
                                 LastEditedForCheck = newFiles[i].LastEdited
                             };
-                            chain.AddBlock(block);                                                      
+                            chain.AddBlock(block);
                         }
                         else
                         {
@@ -83,7 +83,7 @@ namespace BlockChainCore.Helpers
                             if (block.LastEditedForCheck != newFiles[i].LastEdited)
                             {
                                 string lastFilePath = ReturnPathOfLastFile(newFiles[i].FileName, newFiles[i].FileExtension);
-                                if (!FileEquals(lastFilePath,newFiles[i].FullPath))
+                                if (!FileEquals(lastFilePath, newFiles[i].FullPath))
                                 {
                                     block.LastEditedForCheck = newFiles[i].LastEdited;
 
@@ -92,7 +92,7 @@ namespace BlockChainCore.Helpers
                                     {
                                         FileExtension = newFiles[i].FileExtension,
                                         FileName = newFiles[i].FileName + date,
-                                        FullPath = path,                                       
+                                        FullPath = path,
                                         LastEdited = newFiles[i].LastEdited,
                                         LastEditedBy = newFiles[i].LastEditedBy,
                                         LastEditedForCheck = newFiles[i].LastEdited
@@ -103,7 +103,6 @@ namespace BlockChainCore.Helpers
                         }
                     }
                 }
-               await Task.Delay(3000);
             }
         }
     }

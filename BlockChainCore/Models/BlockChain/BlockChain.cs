@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BlockChainCore.Models.BlockChain
 {
@@ -48,8 +49,46 @@ namespace BlockChainCore.Models.BlockChain
             block.Hash = block.CalculateHash();
             Chain.Add(block);
         }
+        public static Blockchain PopulateBlockchain()
+        {
+            string path = "";
+            string date = DateTime.Now.ToString().Replace(':', '-').Trim();
+            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
+            Blockchain files = new Blockchain();
+            for (int i = 0; i < filesPaths.Count; i++)
+            {
+                FileInfo f = new FileInfo(filesPaths[i]);
+
+
+                FileSecurity fS = f.GetAccessControl();
+                Block block = new Block(DateTime.Now, "")
+                {
+                    FileExtension = f.Extension,
+                    FileName = f.Name,
+                    FullPath = f.FullName,
+                    CreatedDate = f.CreationTime,
+                    LastEdited = System.IO.File.GetLastWriteTime(filesPaths[i]),
+                    LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
+                    LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
+                };
+                path = Functions.CopyFiles(block.FileName + date, block.FileExtension, block.FullPath);
+                block.FullPath = path;
+                files.AddBlock(block);
+
+
+            }
+            return files;
+        }
+
         //public static Blockchain PopulateBlockchain()
         //{
+
+        //    make main thread
+        //    Thread mainThread = new Thread(new ThreadStart(MainThread_CreateChainCore));
+
+        //    mainThread.Start();
+
+
         //    string path = "";
 
         //    List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
@@ -63,12 +102,12 @@ namespace BlockChainCore.Models.BlockChain
         //        {
         //            FileExtension = f.Extension,
         //            FileName = f.Name,
-        //            FullPath = f.FullName,                   
+        //            FullPath = f.FullName,
         //            LastEdited = System.IO.File.GetLastWriteTime(filesPaths[i]),
         //            LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
         //            LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
         //        };
-        //        path = Functions.CopyFiles(block.FileName,block.FileExtension, block.FullPath);
+        //        path = Functions.CopyFiles(block.FileName, block.FileExtension, block.FullPath);
         //        block.FullPath = path;
         //        files.AddBlock(block);
 
@@ -77,91 +116,72 @@ namespace BlockChainCore.Models.BlockChain
         //    return files;
         //}
 
-        public static Blockchain PopulateBlockchain()
-        {
+        ///// <summary>
+        ///// every file in the folder is created as a unique folder to save its history
+        ///// </summary>
+        //private static void MainThread_CreateChainCore() {
+        //    //create folders to copy files
+        //    List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
+        //    currentFiles = filesPaths;
+        //    foreach (string filePath in filesPaths) 
+        //    {
+        //        GlobalVariables.MakeDirFromFile(filePath);
+        //        createWatchingThread(filePath);
+        //    }
 
-            //make main thread
-            Thread mainThread=new Thread(new ThreadStart(MainThread_CreateChainCore));
+        //    Thread.Sleep(1000);
+        //    checkForNewFiles();
+        //}
 
-            mainThread.Start();
-            
+        //private static void createWatchingThread(string filePath)
+        //{
+        //    string fileToWatch = GlobalVariables.FolderToWatch + "\\" + filePath;
+        //    runThreadWatcherForFile(fileToWatch);
+        //}
 
-            string path = "";
+        //private static void runThreadWatcherForFile(string fileToWatch)
+        //{
+        //    Thread newThread = new Thread(DoWork);
+        //    newThread.Start(42);
 
-            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
-            Blockchain files = new Blockchain();
-            //for (int i = 0; i < filesPaths.Count; i++)
-            //{
-            //    FileInfo f = new FileInfo(filesPaths[i]);
+        //    // Start a thread that calls a parameterized instance method.
 
-            //    FileSecurity fS = f.GetAccessControl();
-            //    Block block = new Block(DateTime.Now, "")
-            //    {
-            //        FileExtension = f.Extension,
-            //        FileName = f.Name,
-            //        FullPath = f.FullName,
-            //        LastEdited = System.IO.File.GetLastWriteTime(filesPaths[i]),
-            //        LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
-            //        LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
-            //    };
-            //    path = Functions.CopyFiles(block.FileName, block.FileExtension, block.FullPath);
-            //    block.FullPath = path;
-            //    files.AddBlock(block);
+        //    newThread = new Thread(DoMoreWork);
+        //    newThread.Start("The answer.");
 
 
-            //}
-            return files;
-        }
+        //}
+        //public static void DoWork(object data)
+        //{
+        //    Console.WriteLine("Static thread procedure. Data='{0}'",
+        //        data);
+        //}
 
-        /// <summary>
-        /// every file in the folder is created as a unique folder to save its history
-        /// </summary>
-        private static void MainThread_CreateChainCore() {
-            //create folders to copy files
-            List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
-            currentFiles = filesPaths;
-            foreach (string filePath in filesPaths) 
-            {
-                GlobalVariables.MakeDirFromFile(filePath);
-                createWatchingThread(filePath);
-            }
+        //public static void DoMoreWork(object data)
+        //{
+        //    Console.WriteLine("Instance thread procedure. Data='{0}'",
+        //        data);
+        //}
 
-            Thread.Sleep(1000);
-            checkForNewFiles();
-        }
 
-        private static void createWatchingThread(string filePath)
-        {
-            string fileToWatch = GlobalVariables.FolderToWatch + "\\" + filePath;
-            runThreadWatcherForFile(fileToWatch);
-        }
 
-        private static void runThreadWatcherForFile(string fileToWatch)
-        {
-            new Thread(new ThreadStart(watchFile));//qitu ke met
-            throw new NotImplementedException();
-        }
 
-        private static void watchFile() {
-            //continue
-        }
+        ///// <summary>
+        ///// check for added files
+        ///// </summary>
+        //private static void checkForNewFiles() {
+        //    bool changedState = false;
+        //    while (!changedState) {
+        //        List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
+        //        foreach (string fileName in filesPaths) {
+        //            if (!currentFiles.Contains(fileName)) {
+        //                changedState = true;
+        //            }
+        //        }
+        //        Thread.Sleep(1000);
+        //    }
 
-        /// <summary>
-        /// check for added files
-        /// </summary>
-        private static void checkForNewFiles() {
-            bool changedState = false;
-            while (!changedState) {
-                List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
-                foreach (string fileName in filesPaths) {
-                    if (!currentFiles.Contains(fileName)) {
-                        changedState = true;
-                    }
-                }
-                Thread.Sleep(1000);
-            }
-
-            MainThread_CreateChainCore();
-        } 
+        //    MainThread_CreateChainCore();
+        //} 
     }
 }

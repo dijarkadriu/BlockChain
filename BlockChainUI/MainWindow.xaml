@@ -23,13 +23,19 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView AllowsColumnReorder="true"
-              ColumnHeaderToolTip="Item Information">
-
+                           ColumnHeaderToolTip="Item Information">
                     <GridViewColumn Header="File Name" Width="130">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="Gray" BorderThickness=".5" Margin="-6,-3">
-                                    <TextBlock Text="{Binding FileName}" HorizontalAlignment="Left" Margin="6,3"/>
+                                    <TextBlock  HorizontalAlignment="Left" Margin="6,3">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat=" {0}{1}">
+                                                <Binding Path="FileName"/>
+                                                <Binding Path="FileExtension"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
