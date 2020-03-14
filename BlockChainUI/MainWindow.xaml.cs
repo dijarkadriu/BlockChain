@@ -18,7 +18,9 @@ namespace BlockChainUI
         Thread thread;
         Blockchain chain = null;
 
-        private Block selectedBlock; 
+
+
+        private Block selectedBlock;
         public MainWindow()
         {
             InitializeComponent();
@@ -86,28 +88,21 @@ namespace BlockChainUI
         {
             try
             {
-                if (btnTrack.Content.Equals("Stop Tracking"))
+
+                if (GlobalVariables.CopiedFilePath != "" && GlobalVariables.FolderToWatch != "")
                 {
-                    btnTrack.Content = "Start Tracking";
-                    thread.Interrupt();
-                    fileList.ItemsSource = null;
+                    btnTrack.Visibility = Visibility.Hidden;
+                    chain = Blockchain.PopulateBlockchain();
+                    chain.Chain.RemoveAt(0);
+                    fileList.ItemsSource = chain.Chain;
+                    thread = new Thread(new ThreadStart(Bw_DoWork));
+                    thread.Start();
                 }
                 else
                 {
-                    if (GlobalVariables.CopiedFilePath != "" && GlobalVariables.FolderToWatch != "")
-                    {
-                        btnTrack.Content = "Stop Tracking";
-                        chain = Blockchain.PopulateBlockchain();
-                        chain.Chain.RemoveAt(0);
-                        fileList.ItemsSource = chain.Chain;
-                        thread = new Thread(new ThreadStart(Bw_DoWork));
-                        thread.Start();
-                    }
-                    else
-                    {
-                        System.Windows.Forms.MessageBox.Show("Please Select The Recommended Folders", "Error", MessageBoxButtons.OK);
-                    }
+                    System.Windows.Forms.MessageBox.Show("Please Select The Recommended Folders", "Error", MessageBoxButtons.OK);
                 }
+
             }
             catch (Exception ex)
             {
@@ -134,7 +129,7 @@ namespace BlockChainUI
                 };
                 p.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
             }

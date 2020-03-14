@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlockChainCore.Helpers
@@ -29,7 +30,8 @@ namespace BlockChainCore.Helpers
             // fTPClient.upload(fileName, path);
         }
 
-        private string CalculatePath(string name, string extension) {
+        private string CalculatePath(string name, string extension) 
+        {
             return GlobalVariables.CopiedFilePath + name + extension;
         }
 
@@ -89,7 +91,10 @@ namespace BlockChainCore.Helpers
                                 LastEditedForCheck = newFiles[i].LastEdited,
                                 FileNameForList = newFiles[i].FileName + date
                             };
-                            chain.AddBlock(block);
+                            System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate
+                            {
+                                chain.AddBlock(block);
+                            });
                         }
                         else
                         {
@@ -113,7 +118,11 @@ namespace BlockChainCore.Helpers
                                         LastEditedForCheck = newFiles[i].LastEdited,
                                         FileNameForList = newFiles[i].FileName + date
                                     };
-                                    chain.AddBlock(blockToAdd);
+                                    System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate
+                                    {
+                                        chain.AddBlock(blockToAdd);
+                                    });
+                                   
                                 }
                             }
                         }

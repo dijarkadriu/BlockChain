@@ -14,6 +14,7 @@ namespace BlockChainCore.Models.BlockChain
 
     public class Blockchain
     {
+       
         public ObservableCollection<Block> Chain { set; get; }
 
         public Blockchain()
@@ -34,6 +35,7 @@ namespace BlockChainCore.Models.BlockChain
         private void InitializeChain()
         {
             Chain = new ObservableCollection<Block>();
+          
         }
         private Block GetLatestBlock()
         {
