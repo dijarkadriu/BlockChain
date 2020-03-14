@@ -50,14 +50,13 @@ namespace BlockChainCore.Models.BlockChain
         }
         public static Blockchain PopulateBlockchain()
         {
-            string path = "";
+            string path;
             string date = DateTime.Now.ToString().Replace(':', '-').Trim();
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
             Blockchain files = new Blockchain();
             for (int i = 0; i < filesPaths.Count; i++)
             {
                 FileInfo f = new FileInfo(filesPaths[i]);
-
 
                 FileSecurity fS = f.GetAccessControl();
                 Block block = new Block(DateTime.Now, "")
@@ -70,7 +69,7 @@ namespace BlockChainCore.Models.BlockChain
                     LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
                     LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
                 };
-                path = new Functions().CopyFiles(block.FileName + date, block.FileExtension, block.FullPath);
+                path = new Functions().GetFullPath(block.FileName + date, block.FileExtension, block.FullPath);
                 block.FullPath = path;
                 files.AddBlock(block);
 

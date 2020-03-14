@@ -13,25 +13,32 @@ namespace BlockChainCore.Helpers
 {
     public class Functions
     {
-        public string CopyFiles(string name, string extension, string fullPath)
+        public string GetFullPath(string name, string extension, string fullPath)
         {
-            string path = GetPath(name, extension); 
+            string path = CalculatePath(name, extension); 
             File.Copy(fullPath, path);
-
-            FtpClient fTPClient = new FtpClient();
-            // fTPClient.upload(fileName, path);
+            
+            //send to archive
+            TransferFiles();
+            
             return path;
         }
 
-        private string GetPath(string name, string extension) {
+        private void TransferFiles() {
+            FtpClient fTPClient = new FtpClient();
+            // fTPClient.upload(fileName, path);
+        }
+
+        private string CalculatePath(string name, string extension) {
             return GlobalVariables.CopiedFilePath + name + extension;
         }
 
         private string ReturnPathOfLastFile(string fileName, string extensions)
         {
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.CopiedFilePath).ToList();
-            filesPaths = filesPaths.Where(c => c.Contains(fileName) && c.Contains(extensions) && !c.Contains("~$")).OrderByDescending(c => c).ToList();
-            return filesPaths[0];
+            string file = filesPaths.Where(c => c.Contains(fileName) && c.Contains(extensions) && !c.Contains("~$")).OrderByDescending(c => c).First();
+            filesPaths = filesPaths.Where(c => c.Contains(fileName) && c.Contains(extensions) && !c.Contains("~$")).OrderByDescending(c => c).ToList();//should be removed
+            return file;
 
         }
         private bool FileEquals(string lastFilePath, string newFilePath)
@@ -60,8 +67,10 @@ namespace BlockChainCore.Helpers
             {
                 fm = new FileModel();
                 string date = DateTime.Now.ToString().Replace(':', '-').Trim();
+
                 List<FileModel> newFiles = fm.PopulateFilesList();
                 //remove files that are in use 
+                
                 newFiles.RemoveAll(f => f.FileName.StartsWith("~$"));
                 for (int i = 0; i < newFiles.Count; i++)
                 {
@@ -69,7 +78,7 @@ namespace BlockChainCore.Helpers
                     {
                         if (!chain.Chain.Any(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
-                            path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                            path = GetFullPath(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
                             Block block = new Block(DateTime.Now, "")
                             {
                                 FileExtension = newFiles[i].FileExtension,
@@ -92,7 +101,7 @@ namespace BlockChainCore.Helpers
                                 {
                                     block.LastEditedForCheck = newFiles[i].LastEdited;
 
-                                    path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                                    path = GetFullPath(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
                                     Block blockToAdd = new Block(DateTime.Now, "")
                                     {
                                         FileExtension = newFiles[i].FileExtension,
