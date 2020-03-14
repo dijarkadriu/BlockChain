@@ -15,28 +15,27 @@ namespace BlockChainCore.Models.BlockChain
     public class Blockchain
     {
         public ObservableCollection<Block> Chain { set; get; }
-        private static List<string> currentFiles { get; set; }
 
         public Blockchain()
         {
             InitializeChain();
             AddGenesisBlock();
         }
-        public Block CreateGenesisBlock()
+        private Block CreateGenesisBlock()
         {
             return new Block(DateTime.Now, null);
         }
 
-        public void AddGenesisBlock()
+        private void AddGenesisBlock()
         {
             Chain.Add(CreateGenesisBlock());
         }
 
-        public void InitializeChain()
+        private void InitializeChain()
         {
             Chain = new ObservableCollection<Block>();
         }
-        public Block GetLatestBlock()
+        private Block GetLatestBlock()
         {
             return Chain[Chain.Count - 1];
         }
@@ -71,7 +70,7 @@ namespace BlockChainCore.Models.BlockChain
                     LastEditedForCheck = System.IO.File.GetLastWriteTime(filesPaths[i]),
                     LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString()
                 };
-                path = Functions.CopyFiles(block.FileName + date, block.FileExtension, block.FullPath);
+                path = new Functions().CopyFiles(block.FileName + date, block.FileExtension, block.FullPath);
                 block.FullPath = path;
                 files.AddBlock(block);
 

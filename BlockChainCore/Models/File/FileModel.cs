@@ -29,7 +29,7 @@ namespace BlockChainCore.Models.File
 
 
 
-        public static bool IsFileinUse(FileInfo file)
+        public bool IsFileinUse(FileInfo file)
         {
             FileStream stream = null;
 
@@ -52,7 +52,7 @@ namespace BlockChainCore.Models.File
             }
             return false;
         }
-        public static List<FileModel> PopulateFilesList()
+        public List<FileModel> PopulateFilesList()
         {
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
             List<FileModel> files = new List<FileModel>();

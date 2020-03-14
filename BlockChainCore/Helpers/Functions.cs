@@ -11,27 +11,30 @@ using System.Threading.Tasks;
 
 namespace BlockChainCore.Helpers
 {
-    public static class Functions
+    public class Functions
     {
-        public static string CopyFiles(string name, string extension, string fullPath)
+        public string CopyFiles(string name, string extension, string fullPath)
         {
-            FtpClient fTPClient = new FtpClient();
-            string fileName = name + extension;
-            string path = GlobalVariables.CopiedFilePath + fileName;
+            string path = GetPath(name, extension); 
             File.Copy(fullPath, path);
 
-
+            FtpClient fTPClient = new FtpClient();
             // fTPClient.upload(fileName, path);
             return path;
         }
-        public static string ReturnPathOfLastFile(string fileName, string extensions)
+
+        private string GetPath(string name, string extension) {
+            return GlobalVariables.CopiedFilePath + name + extension;
+        }
+
+        private string ReturnPathOfLastFile(string fileName, string extensions)
         {
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.CopiedFilePath).ToList();
             filesPaths = filesPaths.Where(c => c.Contains(fileName) && c.Contains(extensions) && !c.Contains("~$")).OrderByDescending(c => c).ToList();
             return filesPaths[0];
 
         }
-        public static bool FileEquals(string lastFilePath, string newFilePath)
+        private bool FileEquals(string lastFilePath, string newFilePath)
         {
             byte[] lastFile = File.ReadAllBytes(lastFilePath);
             byte[] newFile = File.ReadAllBytes(newFilePath);
@@ -49,18 +52,20 @@ namespace BlockChainCore.Helpers
             return false;
         }
 
-        public static async Task Watch(Blockchain chain)
+        public async Task Watch(Blockchain chain)
         {
             string path = "";
+            FileModel fm;
             while (true)
             {
+                fm = new FileModel();
                 string date = DateTime.Now.ToString().Replace(':', '-').Trim();
-                List<FileModel> newFiles = FileModel.PopulateFilesList();
+                List<FileModel> newFiles = fm.PopulateFilesList();
                 //remove files that are in use 
                 newFiles.RemoveAll(f => f.FileName.StartsWith("~$"));
                 for (int i = 0; i < newFiles.Count; i++)
                 {
-                    if (!FileModel.IsFileinUse(new FileInfo(newFiles[i].FullPath)))
+                    if (!fm.IsFileinUse(new FileInfo(newFiles[i].FullPath)))
                     {
                         if (!chain.Chain.Any(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
