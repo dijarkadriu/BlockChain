@@ -72,6 +72,7 @@ namespace BlockChainCore.Models.BlockChain
             string path;
             string date = DateTime.Now.ToString().Replace(':', '-').Trim();
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
+            filesPaths.RemoveAll(f => f.Contains("~$"));
             Blockchain files = new Blockchain();
             for (int i = 0; i < filesPaths.Count; i++)
             {
