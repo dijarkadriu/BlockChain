@@ -71,6 +71,7 @@ namespace BlockChainCore.Models.BlockChain
         /// <returns>Return the blockchain</returns>
         public static Blockchain PopulateBlockchain()
         {
+            Functions functions =new Functions();
             string path;
             string date = DateTime.Now.ToString().Replace(':', '-').Trim();
             List<string> filesPaths = Directory.GetFiles(GlobalVariables.FolderToWatch).ToList();
@@ -92,7 +93,7 @@ namespace BlockChainCore.Models.BlockChain
                     LastEditedBy = fS.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString(),
                     FileNameForList = f.Name
                 };
-                path = new Functions().CopyFiles(block.FileName + date, block.FileExtension, block.FullPath);
+                path = functions.CopyFiles(block.FileName + date, block.FileExtension, block.FullPath);
                 block.FullPath = path;
                 files.AddBlock(block);
 
