@@ -17,9 +17,6 @@ namespace BlockChainUI
     {
         Thread thread;
         Blockchain chain = null;
-
-
-
         private Block selectedBlock;
         public MainWindow()
         {
@@ -88,7 +85,6 @@ namespace BlockChainUI
         {
             try
             {
-
                 if (GlobalVariables.CopiedFilePath != "" && GlobalVariables.FolderToWatch != "")
                 {
                     btnTrack.Visibility = Visibility.Hidden;

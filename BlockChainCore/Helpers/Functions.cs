@@ -97,18 +97,19 @@ namespace BlockChainCore.Helpers
             {
                 fm = new FileModel();
                 string date = DateTime.Now.ToString().Replace(':', '-').Trim();
+              
 
                 List<FileModel> newFiles = fm.PopulateFilesList();
                 //remove files that are in use 
 
-                newFiles.RemoveAll(f => f.FileName.StartsWith("~$"));
+                newFiles.RemoveAll(f => f.FileName.Contains("~$") || f.FileExtension.Contains(".tmp"));
                 for (int i = 0; i < newFiles.Count; i++)
                 {
                     if (!fm.IsFileinUse(new FileInfo(newFiles[i].FullPath)))
                     {
                         if (!chain.Chain.Any(f => f.FileName == newFiles[i].FileName && f.FileExtension == newFiles[i].FileExtension))
                         {
-                            path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                            path = CopyFiles(newFiles[i].FileName+ " " + date, newFiles[i].FileExtension, newFiles[i].FullPath);
                             Block block = new Block(DateTime.Now, "")
                             {
                                 FileExtension = newFiles[i].FileExtension,
@@ -117,7 +118,7 @@ namespace BlockChainCore.Helpers
                                 LastEdited = newFiles[i].LastEdited,
                                 LastEditedBy = newFiles[i].LastEditedBy,
                                 LastEditedForCheck = newFiles[i].LastEdited,
-                                FileNameForList = newFiles[i].FileName + date
+                                FileNameForList = newFiles[i].FileName + " " + date
                             };
                             System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate
                             {
@@ -135,27 +136,28 @@ namespace BlockChainCore.Helpers
                                 {
                                     block.LastEditedForCheck = newFiles[i].LastEdited;
 
-                                    path = CopyFiles(newFiles[i].FileName + date, newFiles[i].FileExtension, newFiles[i].FullPath);
+                                    path = CopyFiles(newFiles[i].FileName + " " + date, newFiles[i].FileExtension, newFiles[i].FullPath);
                                     Block blockToAdd = new Block(DateTime.Now, "")
                                     {
                                         FileExtension = newFiles[i].FileExtension,
-                                        FileName = newFiles[i].FileName + date,
+                                        FileName = newFiles[i].FileName + " " + date,
                                         FullPath = path,
                                         LastEdited = newFiles[i].LastEdited,
                                         LastEditedBy = newFiles[i].LastEditedBy,
                                         LastEditedForCheck = newFiles[i].LastEdited,
-                                        FileNameForList = newFiles[i].FileName + date
+                                        FileNameForList = newFiles[i].FileName + " " + date
                                     };
                                     System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate
                                     {
                                         chain.AddBlock(blockToAdd);
                                     });
-                                    
+
                                 }
                             }
                         }
                     }
                 }
+                await Task.Delay(100);
             }
         }
     }
